@@ -3,23 +3,31 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
+import 'package:todo/domain/model/todo_model.dart';
+import 'package:todo/presentation/bloc/edit_bloc/edit_bloc.dart';
 import 'package:todo/presentation/bloc/post_bloc/post_bloc_bloc.dart';
+import 'package:todo/presentation/screens/homepage.dart';
 
 class AddPage extends StatelessWidget {
     final Map? todo;
-   AddPage({super.key, this.todo});
-
+   AddPage({super.key, this.todo,this.id, this.model,required this.isEdit});
+  String? id;
+  bool isEdit;
+  TodoModel? model;
   TextEditingController titleController = TextEditingController();
 
   TextEditingController descriptionController = TextEditingController();
 
-  bool isEdit = false;
+   
 
   // @override
   @override
   Widget build(BuildContext context) {
+    if(isEdit){
+      titleController.text = model!.title!;
+      descriptionController.text = model!.description!;
+    }
     return Scaffold(
-
       appBar: AppBar(
         title:  Text(isEdit?'edit toDo' : 'add toDo'),
       ),
@@ -41,9 +49,14 @@ class AddPage extends StatelessWidget {
           maxLines: 8,
           minLines: 5,
         ),const SizedBox(height: 20,),
-        // ElevatedButton(onPressed:isEdit?submit(context):submit(context), 
-        //   child:  Text(isEdit?'Update':'Submit'))
-        ElevatedButton(onPressed: ()=>submit(context), child: Text("add"))
+
+      //  isEdit?
+      //  ElevatedButton(onPressed: ()=>submit(context), child: Text("Add"))
+      //  :ElevatedButton(onPressed: ()=>update(context), child: Text("Update"))
+
+       isEdit?ElevatedButton(onPressed: ()=>update(context), child: Text("Update")):
+       ElevatedButton(onPressed: ()=>submit(context), child: Text("Add"))
+       
       ],
     ),
     );
@@ -52,6 +65,16 @@ void submit(BuildContext context){
   BlocProvider.of<PostBlocBloc>(context).add(
     TodoPostEvent(title: titleController.text, description: descriptionController.text)
   );
+  // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage(),));
+  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomePage(),),(route) => false,);
+}
+
+void update(BuildContext context){
+  BlocProvider.of<EditBloc>(context).add(
+    TodoEditEvent(id:id??'1', title: titleController.text, description: descriptionController.text)
+  );
+  // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage(),));
+  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomePage(),),(route) => false,);
 }
   // Future<void> update()async{ 
   //   final todo = todo;

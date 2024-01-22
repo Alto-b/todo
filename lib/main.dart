@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo/domain/repository/home_repository.dart';
+import 'package:todo/presentation/bloc/delete_bloc/delete_bloc.dart';
+import 'package:todo/presentation/bloc/edit_bloc/edit_bloc.dart';
 import 'package:todo/presentation/bloc/fetch_bloc/todo_bloc.dart';
 import 'package:todo/presentation/bloc/post_bloc/post_bloc_bloc.dart';
 import 'package:todo/presentation/screens/homepage.dart';
@@ -23,6 +25,12 @@ class MyApp extends StatelessWidget {
         ),
             BlocProvider(
                 create: (context) => PostBlocBloc(HomeRepository()),
+            ),
+            BlocProvider(
+                create: (context) => DeleteBloc(HomeRepository()),
+            ),
+            BlocProvider(
+                create: (context) => EditBloc(HomeRepository()),
             ),
         ],
               child: MaterialApp(
