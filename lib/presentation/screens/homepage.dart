@@ -16,7 +16,7 @@ bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
-    HomeRepository rep;
+    // HomeRepository rep;
 
     return BlocProvider(
       create: (context) => TodoBloc(HomeRepository())..add(TodoLoadedEvent()),
